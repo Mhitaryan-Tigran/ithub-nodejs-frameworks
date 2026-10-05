@@ -1,0 +1,24 @@
+$ curl -X POST localhost:3000/users -H 'Content-Type: application/json' -d '{"email":"alice@example.com","name":"Alice","password":"Password123"}'
+{"id":1,"email":"alice@example.com","name":"Alice","role":"USER","createdAt":"2026-10-05T10:06:37.387Z","updatedAt":"2026-10-05T10:06:37.387Z"}
+HTTP 201
+
+$ curl localhost:3000/users
+[{"id":1,"email":"alice@example.com","name":"Alice","role":"USER","createdAt":"2026-10-05T10:06:37.387Z","updatedAt":"2026-10-05T10:06:37.387Z"}]
+HTTP 200
+
+$ curl -X PATCH localhost:3000/users/1 -H 'Content-Type: application/json' -d '{"name":"Alice Smith"}'
+{"id":1,"email":"alice@example.com","name":"Alice Smith","role":"USER","createdAt":"2026-10-05T10:06:37.387Z","updatedAt":"2026-10-05T10:06:37.420Z"}
+HTTP 200
+
+$ curl -X POST localhost:3000/users -H 'Content-Type: application/json' -d '{"email":"nope","name":"A","password":"123"}'
+{"message":["email must be an email","name must be longer than or equal to 2 characters","password must contain letters and digits","password must be longer than or equal to 8 characters"],"error":"Bad Request","statusCode":400}
+HTTP 400
+
+$ curl -X DELETE localhost:3000/users/1
+
+HTTP 204
+
+$ curl localhost:3000/users/1
+{"message":"User 1 not found","error":"Not Found","statusCode":404}
+HTTP 404
+
