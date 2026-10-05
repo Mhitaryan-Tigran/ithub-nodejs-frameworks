@@ -19,8 +19,8 @@ const POSTS = [
 ]
 
 async function main() {
-  if (process.env.SEED_IF_EMPTY === 'true' && (await prisma.user.count()) > 0) {
-    console.log('Database already has users, demo seed skipped')
+  if (process.env.SEED_IF_EMPTY === 'true' && (await prisma.post.count()) > 0) {
+    console.log('Database already has posts, demo seed skipped')
     return
   }
   await prisma.$executeRawUnsafe('TRUNCATE "User", "Post", "Tag", "_PostToTag", "Message", "Comment" RESTART IDENTITY CASCADE')
