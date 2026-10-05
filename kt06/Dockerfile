@@ -18,4 +18,4 @@ COPY --chown=node:node public ./public
 USER node
 EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=3s --start-period=30s CMD node -e "fetch('http://localhost:'+(process.env.PORT||3000)+'/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
-CMD ["sh", "-c", "npx prisma migrate deploy && exec node src/server.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && if [ \"$SEED_DEMO\" = true ]; then SEED_IF_EMPTY=true node prisma/seed.js; fi && exec node src/server.js"]
