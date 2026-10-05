@@ -2,7 +2,7 @@
 
 Backend блог-платформы: пользователи с ролями, посты с тегами, комментарии, realtime-чат, очередь писем. Express 4, Prisma ORM, PostgreSQL, Redis + BullMQ, Socket.io, JWT, Swagger, Jest + Supertest, Docker Compose.
 
-**Публичный URL:** см. раздел «Деплой» ниже · **Документация:** `/api/docs` · **Чат:** `/chat.html` · **Очереди:** `/admin/queues`
+**Публичный URL:** https://ithub-blog-platform.onrender.com · **Документация:** `/api/docs` · **Чат:** `/chat.html` · **Очереди:** `/admin/queues`
 
 ## Возможности
 
@@ -91,4 +91,4 @@ __tests__/         38 тестов
 
 Render: web service из этого репозитория (Docker, `kt06/`), PostgreSQL и Key Value (Redis) от Render. На бесплатном плане фоновых воркеров нет, поэтому worker запускается внутри веб-процесса (`RUN_WORKER=true`). Бесплатный сервис засыпает без запросов — первый запрос будит его примерно за минуту.
 
-Проверки Docker Compose — в [docker-demo.txt](docker-demo.txt), скриншоты — в `screenshots/`.
+Адрес: https://ithub-blog-platform.onrender.com — `/health`, `/api/docs`, `/chat.html`. Демо-данные загружаются при первом старте, если в базе нет постов (`SEED_DEMO=true`). Проверка задеплоенного API — в [render-demo.txt](render-demo.txt), проверки Docker Compose — в [docker-demo.txt](docker-demo.txt), скриншоты — в `screenshots/`.
