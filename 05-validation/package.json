@@ -1,0 +1,19 @@
+{
+  "name": "validation-demo",
+  "version": "1.0.0",
+  "description": "Request validation with Joi and express-validator",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "demo": "bash demo.sh > demo.txt"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.22.3",
+    "express-validator": "^7.3.2",
+    "joi": "^18.2.9"
+  }
+}

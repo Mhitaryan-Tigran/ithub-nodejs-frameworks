@@ -1,0 +1,18 @@
+{
+  "name": "upload-demo",
+  "version": "1.0.0",
+  "description": "File uploads with Multer: type and size checks",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "demo": "bash demo.sh > demo.txt"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.22.3",
+    "multer": "^2.4.0"
+  }
+}

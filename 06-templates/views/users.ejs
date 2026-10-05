@@ -1,0 +1,24 @@
+<%- include('partials/head') %>
+<h1><%= title %><% if (role) { %> <span class="muted">· <%= role %></span><% } %></h1>
+<div class="filters">
+  <a class="chip <%= role ? '' : 'active' %>" href="/users">Все</a>
+  <% roles.forEach((r) => { %>
+    <a class="chip <%= r === role ? 'active' : '' %>" href="/users?role=<%= r %>"><%= r %></a>
+  <% }) %>
+</div>
+<% if (users.length === 0) { %>
+  <p class="empty">Никого с такой ролью.</p>
+<% } else { %>
+  <ul class="list">
+    <% users.forEach((u) => { %>
+      <li>
+        <a href="/users/<%= u.id %>">
+          <span class="avatar"><%= u.name.split(' ').map((p) => p[0]).join('') %></span>
+          <span class="who"><strong><%= u.name %></strong><span class="muted"><%= u.email %></span></span>
+          <span class="badge badge-<%= u.role %>"><%= u.role %></span>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+<%- include('partials/foot') %>

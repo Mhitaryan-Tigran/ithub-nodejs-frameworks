@@ -1,0 +1,13 @@
+<%- include('partials/head') %>
+<section class="hero">
+  <h1>Команда в одном месте</h1>
+  <p class="lead">Страницы собираются на сервере из шаблонов EJS, стили отдаются как статика.</p>
+  <a class="button" href="/users">Все пользователи ›</a>
+</section>
+<section class="stats">
+  <div class="stat"><span class="num"><%= total %></span><span class="label">всего</span></div>
+  <% counts.forEach(({ role, count }) => { %>
+    <a class="stat" href="/users?role=<%= role %>"><span class="num"><%= count %></span><span class="label"><%= role %></span></a>
+  <% }) %>
+</section>
+<%- include('partials/foot') %>

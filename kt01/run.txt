@@ -1,0 +1,16 @@
+$ npm start
+Фильтр: возраст >= 18, город = Moscow
+Обработано строк: 7
+Прошли фильтр: 3
+Отброшено: 4
+Результат записан в data/result.csv
+
+$ cat data/result.csv
+id,name,age,city
+1,Alice,25,Moscow
+3,Charlie,32,Moscow
+5,Eve,28,Moscow
+
+$ INPUT_FILE=data/missing.csv node src/index.js; echo "exit code $?"
+Ошибка: Входной файл не найден: data/missing.csv
+exit code 1

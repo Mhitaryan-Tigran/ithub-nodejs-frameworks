@@ -1,0 +1,117 @@
+:root {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --ink: #1d1d1f;
+  --muted: #6e6e73;
+  --line: #d2d2d7;
+  --accent: #0071e3;
+  --bubble: #e9e9eb;
+  --radius: 18px;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --ink: #f5f5f7;
+    --muted: #a1a1a6;
+    --line: #38383a;
+    --accent: #2997ff;
+    --bubble: #2c2c2e;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+[hidden] { display: none !important; }
+
+.shell { max-width: 1040px; margin: 0 auto; padding: 24px 16px; min-height: 100vh; display: grid; place-items: center; }
+
+.card { background: var(--surface); border-radius: var(--radius); padding: 28px; width: min(400px, 100%); }
+.login h1 { font-size: 28px; margin: 0 0 6px; letter-spacing: -0.01em; }
+.login label { display: grid; gap: 6px; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.muted { color: var(--muted); font-size: 13px; }
+.error { color: #d70015; min-height: 1.2em; font-size: 13px; }
+
+input {
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 0 14px;
+  width: 100%;
+}
+input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+
+button {
+  font: inherit;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 980px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}
+button:active { transform: scale(0.97); }
+.login button { width: 100%; margin-top: 20px; }
+
+.chat {
+  width: 100%;
+  height: min(720px, calc(100vh - 48px));
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.side { border-right: 1px solid var(--line); padding: 16px; overflow-y: auto; }
+.side h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 8px 0; }
+.rooms, .people { list-style: none; margin: 0 0 16px; padding: 0; }
+.rooms button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: var(--ink);
+  border-radius: 10px;
+  min-height: 36px;
+  padding: 0 10px;
+}
+.rooms button[aria-current="true"] { background: var(--bubble); font-weight: 600; }
+.people li { padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+.people li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #30d158; }
+.inline { display: flex; gap: 6px; margin-bottom: 16px; }
+.inline button { padding: 0 14px; }
+
+.feed { display: grid; grid-template-rows: auto 1fr auto; min-width: 0; }
+.bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.messages { list-style: none; margin: 0; padding: 16px 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.messages li { max-width: 75%; align-self: flex-start; }
+.messages li.mine { align-self: flex-end; text-align: right; }
+.messages .who { font-size: 12px; color: var(--muted); margin: 0 10px 2px; }
+.messages .text { display: inline-block; padding: 8px 14px; border-radius: 18px; background: var(--bubble); text-align: left; overflow-wrap: anywhere; }
+.messages li.mine .text { background: var(--accent); color: #fff; }
+.messages li.system { align-self: center; font-size: 12px; color: var(--muted); }
+.composer { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); }
+
+@media (max-width: 640px) {
+  .chat { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: calc(100vh - 48px); }
+  .side { border-right: 0; border-bottom: 1px solid var(--line); max-height: 180px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button { transition: none; }
+}

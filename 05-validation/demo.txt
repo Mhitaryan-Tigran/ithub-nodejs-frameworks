@@ -1,0 +1,28 @@
+$ curl -X POST http://localhost:3000/users -H 'Content-Type: application/json' -d '{"name":"Alice","email":"alice@example.com","age":25}'
+{"id":1,"name":"Alice","email":"alice@example.com","age":25,"role":"user"}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/users -H 'Content-Type: application/json' -d '{"name":"A","email":"not-email","age":-5}'
+{"error":"ValidationError","details":[{"field":"name","message":"\"name\" length must be at least 2 characters long"},{"field":"email","message":"\"email\" must be a valid email"},{"field":"age","message":"\"age\" must be greater than or equal to 0"}]}
+HTTP 400
+
+$ curl -X POST http://localhost:3000/users -H 'Content-Type: application/json' -d '{"name":"Bob","email":"bob@example.com","age":30,"extra":"field"}'
+{"id":2,"name":"Bob","email":"bob@example.com","age":30,"role":"user"}
+HTTP 201
+
+$ curl 'http://localhost:3000/users'
+{"data":[{"id":1,"name":"Alice","email":"alice@example.com","age":25,"role":"user"},{"id":2,"name":"Bob","email":"bob@example.com","age":30,"role":"user"}],"query":{"page":1,"limit":10,"sortBy":"name","order":"asc"}}
+HTTP 200
+
+$ curl 'http://localhost:3000/users?limit=500&order=sideways'
+{"error":"ValidationError","details":[{"field":"limit","message":"\"limit\" must be less than or equal to 100"},{"field":"order","message":"\"order\" must be one of [asc, desc]"}]}
+HTTP 400
+
+$ curl -X POST http://localhost:3000/v2/users -H 'Content-Type: application/json' -d '{"name":"","email":"bad","age":200}'
+{"error":"ValidationError","details":[{"field":"name","message":"name: от 2 до 50 символов","value":""},{"field":"email","message":"email: некорректный адрес","value":"bad"},{"field":"age","message":"age: целое число от 0 до 150","value":200}]}
+HTTP 400
+
+$ curl -X POST http://localhost:3000/v2/users -H 'Content-Type: application/json' -d '{"name":"  Carol ","email":"Carol@Example.com","age":"41"}'
+{"id":3,"name":"Carol","email":"carol@example.com","age":41,"role":"user"}
+HTTP 201
+

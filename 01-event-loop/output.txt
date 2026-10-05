@@ -1,0 +1,14 @@
+=== Демонстрация Event Loop ===
+
+[1] Синхронный код — начало
+[1] Синхронный код — конец
+
+[async] Начало чтения файла...
+[async] Этот код выполнился ДО чтения файла
+[2] process.nextTick
+[3] Promise.then
+[4] Promise.then chained
+[5] setTimeout 0ms
+[async] Файл прочитан за 0.42ms
+[async] Размер файла: 866 символов
+[6] setTimeout 100ms

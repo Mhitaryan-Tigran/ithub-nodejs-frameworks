@@ -1,0 +1,23 @@
+1. No token
+  [anonymous] ← connect_error: Нужен access token: io({ auth: { token } })
+2. Alice connects
+  [Alice] ← users:online: ["Alice"]
+3. Bob connects
+  [Alice] ← user:online: "Bob"
+  [Bob] ← users:online: ["Alice","Bob"]
+4. Global chat
+  [Alice] ← message:new: "Alice in #general: Всем привет!"
+  [Alice] → message:send {"text":"Всем привет!"} ack ok
+  [Bob] ← message:new: "Alice in #general: Всем привет!"
+5. Rooms
+  [Alice] → room:message {"room":"backend","text":"не в комнате"} ack error: Сначала войдите в комнату backend
+  [Alice] → room:join {"room":"backend"} ack ok
+  [Alice] ← room:joined: "Bob → #backend"
+  [Bob] → room:join {"room":"backend"} ack ok
+  [Alice] ← room:message: "Bob in #backend: Кто деплоит сегодня?"
+  [Bob] ← room:message: "Bob in #backend: Кто деплоит сегодня?"
+  [Bob] → room:message {"room":"backend","text":"Кто деплоит сегодня?"} ack ok
+  [Alice] ← room:left: "Bob → #backend"
+  [Bob] → room:leave {"room":"backend"} ack ok
+6. Bob disconnects
+  [Alice] ← user:offline: "Bob"

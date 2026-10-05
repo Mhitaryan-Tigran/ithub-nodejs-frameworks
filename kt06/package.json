@@ -1,0 +1,65 @@
+{
+  "name": "kt06-blog-platform",
+  "version": "1.0.0",
+  "description": "Final project: blog platform API with auth, RBAC, comments, realtime chat, email queue, Docker and Swagger",
+  "main": "src/server.js",
+  "scripts": {
+    "db": "docker compose up -d db redis",
+    "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "seed": "node prisma/seed.js",
+    "start": "node src/server.js",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
+    "demo": "bash demo.sh > demo.txt",
+    "chat:demo": "node scripts/chat-demo.js",
+    "worker": "node src/workers/index.js",
+    "docker:up": "docker compose up --build -d"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@bull-board/api": "^9.10.4",
+    "@bull-board/express": "^9.10.4",
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "bullmq": "^6.3.11",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.5",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "hpp": "^0.2.3",
+    "ioredis": "^6.0.0",
+    "joi": "^18.2.9",
+    "jsonwebtoken": "^9.0.3",
+    "socket.io": "^4.8.4",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "embedded-postgres": "^18.4.0-beta.17",
+    "jest": "^30.5.2",
+    "prisma": "^6.19.3",
+    "socket.io-client": "^4.8.4",
+    "supertest": "^7.3.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFiles": [
+      "<rootDir>/__tests__/env.js"
+    ],
+    "globalSetup": "<rootDir>/__tests__/globalSetup.js",
+    "globalTeardown": "<rootDir>/__tests__/globalTeardown.js",
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/"
+    ]
+  }
+}

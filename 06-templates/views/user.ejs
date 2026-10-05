@@ -1,0 +1,15 @@
+<%- include('partials/head') %>
+<a class="back" href="/users">‹ Пользователи</a>
+<article class="card profile">
+  <span class="avatar big"><%= user.name.split(' ').map((p) => p[0]).join('') %></span>
+  <h1><%= user.name %></h1>
+  <span class="badge badge-<%= user.role %>"><%= user.role %></span>
+  <dl>
+    <dt>Email</dt><dd><a href="mailto:<%= user.email %>"><%= user.email %></a></dd>
+    <dt>Город</dt><dd><%= user.city %></dd>
+    <dt>В команде с</dt><dd><%= formatDate(user.joined) %></dd>
+  </dl>
+  <p><%= user.bio || 'Пока ничего о себе не написал.' %></p>
+  <a class="button secondary" href="/emails/welcome/<%= user.id %>">Приветственное письмо ›</a>
+</article>
+<%- include('partials/foot') %>

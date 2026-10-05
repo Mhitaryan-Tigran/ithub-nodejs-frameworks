@@ -1,0 +1,60 @@
+$ curl 'http://localhost:3000/api/users?page=1&limit=1'
+{"data":[{"id":1,"email":"alice@example.com","name":"Alice","role":"ADMIN","createdAt":"2026-10-04T21:36:24.255Z","_count":{"posts":3}}],"meta":{"total":2,"page":1,"limit":1,"pages":2}}
+HTTP 200
+
+$ curl -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"email":"carol@example.com","name":"Carol"}'
+{"data":{"id":3,"email":"carol@example.com","name":"Carol","role":"USER","createdAt":"2026-10-04T21:36:25.469Z"}}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"email":"carol@example.com","name":"Carol again"}'
+{"error":{"code":"CONFLICT","message":"Значение поля email уже занято"}}
+HTTP 409
+
+$ curl -X PATCH http://localhost:3000/api/users/3 -H 'Content-Type: application/json' -d '{"role":"ADMIN"}'
+{"data":{"id":3,"email":"carol@example.com","name":"Carol","role":"ADMIN","createdAt":"2026-10-04T21:36:25.469Z"}}
+HTTP 200
+
+$ curl -X POST http://localhost:3000/api/posts -H 'Content-Type: application/json' -d '{"title":"Tags via connectOrCreate","content":"text","published":true,"authorId":3,"tags":["prisma","new-tag"]}'
+{"data":{"id":6,"title":"Tags via connectOrCreate","content":"text","published":true,"createdAt":"2026-10-04T21:36:25.507Z","authorId":3,"author":{"id":3,"name":"Carol","email":"carol@example.com"},"tags":[{"id":1,"name":"prisma"},{"id":8,"name":"new-tag"}]}}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/api/posts -H 'Content-Type: application/json' -d '{"content":"no title","authorId":"abc"}'
+{"error":{"code":"VALIDATION_ERROR","message":"Данные запроса не прошли проверку","details":[{"field":"title","message":"\"title\" is required"},{"field":"authorId","message":"\"authorId\" must be a number"}]}}
+HTTP 400
+
+$ curl 'http://localhost:3000/api/posts?search=prisma&published=true&page=1&limit=2'
+{"data":[{"id":4,"title":"Why I like PRISMA migrations","content":"Why I like PRISMA migrations. Body text.","published":true,"createdAt":"2026-09-04T00:00:00.000Z","authorId":2,"author":{"id":2,"name":"Bob","email":"bob@example.com"},"tags":[{"id":1,"name":"prisma"}]},{"id":1,"title":"Getting started with Prisma","content":"Getting started with Prisma. Body text.","published":true,"createdAt":"2026-09-01T00:00:00.000Z","authorId":1,"author":{"id":1,"name":"Alice","email":"alice@example.com"},"tags":[{"id":1,"name":"prisma"},{"id":2,"name":"orm"}]}],"meta":{"total":2,"page":1,"limit":2,"pages":1}}
+HTTP 200
+
+$ curl 'http://localhost:3000/api/posts?authorId=2'
+{"data":[{"id":4,"title":"Why I like PRISMA migrations","content":"Why I like PRISMA migrations. Body text.","published":true,"createdAt":"2026-09-04T00:00:00.000Z","authorId":2,"author":{"id":2,"name":"Bob","email":"bob@example.com"},"tags":[{"id":1,"name":"prisma"}]},{"id":2,"title":"PostgreSQL indexes in practice","content":"PostgreSQL indexes in practice. Body text.","published":true,"createdAt":"2026-09-02T00:00:00.000Z","authorId":2,"author":{"id":2,"name":"Bob","email":"bob@example.com"},"tags":[{"id":3,"name":"postgres"},{"id":4,"name":"sql"}]}],"meta":{"total":2,"page":1,"limit":10,"pages":1}}
+HTTP 200
+
+$ curl http://localhost:3000/api/posts/1
+{"data":{"id":1,"title":"Getting started with Prisma","content":"Getting started with Prisma. Body text.","published":true,"createdAt":"2026-09-01T00:00:00.000Z","authorId":1,"author":{"id":1,"name":"Alice","email":"alice@example.com"},"tags":[{"id":1,"name":"prisma"},{"id":2,"name":"orm"}]}}
+HTTP 200
+
+$ curl -X PATCH http://localhost:3000/api/posts/3 -H 'Content-Type: application/json' -d '{"published":true,"tags":["express","errors"]}'
+{"data":{"id":3,"title":"Draft: Express error handling","content":"Draft: Express error handling. Body text.","published":true,"createdAt":"2026-09-03T00:00:00.000Z","authorId":1,"author":{"id":1,"name":"Alice","email":"alice@example.com"},"tags":[{"id":5,"name":"express"},{"id":9,"name":"errors"}]}}
+HTTP 200
+
+$ curl http://localhost:3000/api/users/1
+{"data":{"id":1,"email":"alice@example.com","name":"Alice","role":"ADMIN","createdAt":"2026-10-04T21:36:24.255Z","posts":[{"id":5,"title":"Notes on REST pagination","content":"Notes on REST pagination. Body text.","published":false,"createdAt":"2026-09-05T00:00:00.000Z","authorId":1,"tags":[{"name":"rest"},{"name":"api"}]},{"id":3,"title":"Draft: Express error handling","content":"Draft: Express error handling. Body text.","published":true,"createdAt":"2026-09-03T00:00:00.000Z","authorId":1,"tags":[{"name":"express"},{"name":"errors"}]},{"id":1,"title":"Getting started with Prisma","content":"Getting started with Prisma. Body text.","published":true,"createdAt":"2026-09-01T00:00:00.000Z","authorId":1,"tags":[{"name":"prisma"},{"name":"orm"}]}]}}
+HTTP 200
+
+$ curl -X DELETE http://localhost:3000/api/posts/5
+
+HTTP 204
+
+$ curl http://localhost:3000/api/posts/5
+{"error":{"code":"NOT_FOUND","message":"Пост 5 не найден"}}
+HTTP 404
+
+$ curl -X DELETE http://localhost:3000/api/users/3
+
+HTTP 204
+
+$ curl http://localhost:3000/api/users/abc
+{"error":{"code":"VALIDATION_ERROR","message":"Данные запроса не прошли проверку","details":[{"field":"id","message":"\"id\" must be a number"}]}}
+HTTP 400
+

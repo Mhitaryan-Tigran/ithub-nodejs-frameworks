@@ -1,0 +1,57 @@
+{
+  "name": "kt04-blog-secure",
+  "version": "1.0.0",
+  "description": "Blog API with JWT auth, RBAC, security middleware and Jest tests",
+  "main": "src/server.js",
+  "scripts": {
+    "db": "node scripts/db.js",
+    "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "seed": "node prisma/seed.js",
+    "start": "node src/server.js",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
+    "demo": "bash demo.sh > demo.txt"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.5",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "hpp": "^0.2.3",
+    "joi": "^18.2.9",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "embedded-postgres": "^18.4.0-beta.17",
+    "jest": "^30.5.2",
+    "prisma": "^6.19.3",
+    "supertest": "^7.3.1"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFiles": [
+      "<rootDir>/__tests__/env.js"
+    ],
+    "globalSetup": "<rootDir>/__tests__/globalSetup.js",
+    "globalTeardown": "<rootDir>/__tests__/globalTeardown.js",
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/"
+    ]
+  }
+}

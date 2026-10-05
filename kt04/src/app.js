@@ -1,0 +1,30 @@
+const express = require('express')
+const cookieParser = require('cookie-parser')
+const config = require('./config')
+const security = require('./middleware/security')
+const authRouter = require('./routes/auth')
+const usersRouter = require('./routes/users')
+const postsRouter = require('./routes/posts')
+const adminRouter = require('./routes/admin')
+const { notFound, errorHandler } = require('./middleware/errorHandler')
+
+const app = express()
+
+app.disable('x-powered-by')
+app.set('trust proxy', 1)
+app.use(security.helmet)
+app.use(security.cors)
+app.use(express.json({ limit: config.bodyLimit }))
+app.use(express.urlencoded({ extended: false, limit: config.bodyLimit }))
+app.use(security.hpp)
+app.use(cookieParser())
+
+app.get('/health', (req, res) => res.json({ status: 'ok' }))
+app.use('/auth', authRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/posts', postsRouter)
+app.use(['/admin', '/api/admin'], adminRouter)
+app.use(notFound)
+app.use(errorHandler)
+
+module.exports = app

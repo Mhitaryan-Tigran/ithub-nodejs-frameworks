@@ -1,0 +1,138 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer, minimum: 1 }
+    Page:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    Limit:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 50, default: 10 }
+  schemas:
+    Role:
+      type: string
+      enum: [USER, MODERATOR, ADMIN]
+    User:
+      type: object
+      properties:
+        id: { type: integer, example: 3 }
+        email: { type: string, format: email, example: alice@example.com }
+        name: { type: string, example: Alice }
+        role: { $ref: '#/components/schemas/Role' }
+        createdAt: { type: string, format: date-time }
+    Tag:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string, example: prisma }
+    Post:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        title: { type: string, example: Getting started with Prisma }
+        content: { type: string, nullable: true }
+        published: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        authorId: { type: integer }
+        author:
+          type: object
+          properties:
+            id: { type: integer }
+            name: { type: string }
+        tags:
+          type: array
+          items: { $ref: '#/components/schemas/Tag' }
+    PostInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, maxLength: 200, example: My first post }
+        content: { type: string, example: Hello }
+        published: { type: boolean, example: true }
+        tags:
+          type: array
+          items: { type: string }
+          example: [node, express]
+    PostPatch:
+      type: object
+      minProperties: 1
+      properties:
+        title: { type: string, maxLength: 200 }
+        content: { type: string }
+        published: { type: boolean }
+        tags:
+          type: array
+          items: { type: string }
+    Message:
+      type: object
+      properties:
+        id: { type: integer }
+        room: { type: string, example: general }
+        text: { type: string, example: Привет! }
+        createdAt: { type: string, format: date-time }
+        author:
+          type: object
+          properties:
+            id: { type: integer }
+            name: { type: string }
+    Meta:
+      type: object
+      properties:
+        total: { type: integer, example: 12 }
+        page: { type: integer, example: 1 }
+        limit: { type: integer, example: 10 }
+        pages: { type: integer, example: 2 }
+    AuthResult:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            user: { $ref: '#/components/schemas/User' }
+            accessToken: { type: string }
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string, example: VALIDATION_ERROR }
+            message: { type: string }
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field: { type: string }
+                  message: { type: string }
+  responses:
+    BadRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Missing or invalid access token
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Role or ownership does not allow this action
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

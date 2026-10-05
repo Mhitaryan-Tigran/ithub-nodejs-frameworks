@@ -1,0 +1,31 @@
+{
+  "name": "kt03-blog-api",
+  "version": "1.0.0",
+  "description": "Blog REST API: Express, Prisma ORM, PostgreSQL, Joi",
+  "main": "src/index.js",
+  "scripts": {
+    "db": "node scripts/db.js",
+    "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "seed": "node prisma/seed.js",
+    "start": "node src/index.js",
+    "demo": "bash demo.sh > demo.txt"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "dotenv": "^18.0.5",
+    "express": "^4.22.3",
+    "joi": "^18.2.9"
+  },
+  "devDependencies": {
+    "embedded-postgres": "^18.4.0-beta.17",
+    "prisma": "^6.19.3"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
+}

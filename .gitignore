@@ -1,0 +1,14 @@
+node_modules/
+.env
+.pgdata/
+.mongo-data/
+.mongodb-binaries/
+coverage/
+server.log
+db.log
+mongo.log
+cookies.txt
+uploads/
+prisma/dev.db*
+data/result.csv
+.DS_Store

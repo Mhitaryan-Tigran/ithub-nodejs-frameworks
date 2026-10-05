@@ -1,0 +1,44 @@
+$ curl http://localhost:3000/health
+{"status":"ok","uptime":1}
+HTTP 200
+
+$ curl -X POST http://localhost:3000/login -H 'Content-Type: application/json' -d '{"username":"admin","password":"secret"}'
+{"token":"valid-token"}
+HTTP 200
+
+$ curl http://localhost:3000/profile
+{"error":"Unauthorized","message":"Нужен заголовок Authorization: Bearer <token>"}
+HTTP 401
+
+$ curl http://localhost:3000/profile -H 'Authorization: Bearer valid-token'
+{"user":{"username":"admin","role":"admin"},"requestId":"4dc61064-668d-4d0d-9c96-653aeed578a6"}
+HTTP 200
+
+$ curl -X POST http://localhost:3000/users -H 'Content-Type: application/json' -H 'Authorization: Bearer valid-token' -d '{"name":"Alice","age":25,"city":"Moscow"}'
+{"id":1,"name":"Alice","age":25,"city":"Moscow"}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/users -H 'Content-Type: application/json' -H 'Authorization: Bearer valid-token' -d '{"name":"","age":"not-a-number"}'
+{"error":"ValidationError","details":[{"field":"name","message":"name — строка не короче 2 символов"},{"field":"age","message":"age — целое число от 0 до 150"}]}
+HTTP 400
+
+$ curl http://localhost:3000/unknown
+{"error":"NotFound","message":"Маршрут GET /unknown не найден"}
+HTTP 404
+
+--- server log ---
+Server on http://localhost:3000
+2026-10-04T21:28:30.312Z GET /health 200 5.8ms
+GET /health 200 4.425 ms - 26
+2026-10-04T21:28:30.328Z POST /login 200 3.6ms
+POST /login 200 3.425 ms - 23
+2026-10-04T21:28:30.342Z GET /profile 401 0.4ms
+GET /profile 401 0.231 ms - 96
+2026-10-04T21:28:30.356Z GET /profile 200 0.4ms
+GET /profile 200 0.226 ms - 95
+2026-10-04T21:28:30.368Z POST /users 201 0.6ms
+POST /users 201 0.467 ms - 48
+2026-10-04T21:28:30.379Z POST /users 400 0.4ms
+POST /users 400 0.258 ms - 201
+2026-10-04T21:28:30.391Z GET /unknown 404 0.3ms
+GET /unknown 404 0.180 ms - 78

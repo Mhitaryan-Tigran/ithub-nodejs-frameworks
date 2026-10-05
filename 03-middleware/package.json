@@ -1,0 +1,19 @@
+{
+  "name": "middleware-demo",
+  "version": "1.0.0",
+  "description": "Express middleware chain: built-in, third-party and custom",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "demo": "bash demo.sh > demo.txt"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.3",
+    "morgan": "^1.12.1"
+  }
+}

@@ -1,0 +1,65 @@
+
+1:1 and 1:N — user with profile and posts (include):
+{
+  id: 1,
+  email: 'alice@example.com',
+  name: 'Alice',
+  createdAt: 2026-10-04T21:33:00.276Z,
+  profile: { id: 1, bio: 'Backend developer', city: 'Moscow', userId: 1 },
+  posts: [
+    { title: 'Relations in Prisma', published: true },
+    { title: 'Migrations without fear', published: false }
+  ]
+}
+
+M:N — tags with their posts:
+[
+  {
+    id: 2,
+    name: 'orm',
+    posts: [
+      { title: 'Relations in Prisma' },
+      { title: 'SQL joins explained' }
+    ]
+  },
+  {
+    id: 1,
+    name: 'prisma',
+    posts: [
+      { title: 'Relations in Prisma' },
+      { title: 'Migrations without fear' }
+    ]
+  },
+  { id: 3, name: 'sql', posts: [ { title: 'SQL joins explained' } ] }
+]
+
+Reverse side — post with author and tags:
+{
+  title: 'SQL joins explained',
+  author: { name: 'Bob', profile: { city: 'Kazan' } },
+  tags: [ { name: 'orm' }, { name: 'sql' } ]
+}
+
+viewCount from migration add_view_count, incremented by 3:
+{ title: 'Relations in Prisma', viewCount: 3 }
+
+Changing M:N links (disconnect orm, connect sql):
+{
+  title: 'Relations in Prisma',
+  tags: [ { name: 'prisma' }, { name: 'sql' } ]
+}
+
+Relation filters — users with at least one published post tagged sql:
+[ { name: 'Alice' }, { name: 'Bob' } ]
+
+Relation filters — users without drafts:
+[ { name: 'Bob' } ]
+
+Counting relations:
+[
+  { name: 'Alice', _count: { posts: 2 } },
+  { name: 'Bob', _count: { posts: 1 } }
+]
+
+After deleting Alice — cascade removed her profile and posts, tags stay:
+{ users: 1, profiles: 1, posts: 1, tags: 3 }

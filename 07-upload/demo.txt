@@ -1,0 +1,25 @@
+$ curl -X POST http://localhost:3000/upload/avatar -F 'avatar=@test.jpg'
+{"file":{"field":"avatar","originalName":"test.jpg","mimeType":"image/jpeg","size":19,"url":"/uploads/avatars/1791149469412-febb9d6a.jpg"}}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/upload/avatar -F 'avatar=@test.txt'
+{"error":"LIMIT_UNEXPECTED_FILE","message":"Недопустимый тип файла test.txt (text/plain). Разрешено: .jpg, .jpeg, .png"}
+HTTP 400
+
+$ curl -X POST http://localhost:3000/upload/avatar -F 'avatar=@big.png'
+{"error":"LIMIT_FILE_SIZE","message":"Файл больше допустимого размера"}
+HTTP 413
+
+$ curl -X POST http://localhost:3000/upload/documents -F 'documents=@test.txt' -F 'documents=@test.txt'
+{"count":2,"files":[{"field":"documents","originalName":"test.txt","mimeType":"text/plain","size":5,"url":"/uploads/documents/1791149469460-cde271cb.txt"},{"field":"documents","originalName":"test.txt","mimeType":"text/plain","size":5,"url":"/uploads/documents/1791149469460-0fd9bfd3.txt"}]}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/upload/profile -F 'name=Alice' -F 'bio=Backend developer' -F 'avatar=@test.jpg'
+{"profile":{"name":"Alice","bio":"Backend developer","avatar":{"field":"avatar","originalName":"test.jpg","mimeType":"image/jpeg","size":19,"url":"/uploads/avatars/1791149469471-a853a1b0.jpg"}}}
+HTTP 201
+
+$ curl http://localhost:3000/uploads/avatars/1791149469482-62f02131.jpg
+fake image content
+
+HTTP 200
+

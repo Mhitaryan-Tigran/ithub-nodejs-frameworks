@@ -1,0 +1,7 @@
+process.env.NODE_ENV ||= 'test'
+process.env.DATABASE_URL = 'postgresql://postgres:postgres@localhost:5434/blog_test'
+process.env.JWT_ACCESS_SECRET = 'test-access-secret-that-is-long-enough-123'
+process.env.JWT_REFRESH_SECRET = 'test-refresh-secret-that-is-long-enough-456'
+process.env.CORS_ORIGINS = 'http://localhost:5173'
+process.env.LOGIN_RATE_LIMIT = '10'
+process.env.BCRYPT_ROUNDS = '4'

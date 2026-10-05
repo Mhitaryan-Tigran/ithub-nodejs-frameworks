@@ -1,0 +1,10 @@
+node_modules
+.pgdata
+.env
+coverage
+__tests__
+screenshots
+*.log
+*.txt
+demo.sh
+.git

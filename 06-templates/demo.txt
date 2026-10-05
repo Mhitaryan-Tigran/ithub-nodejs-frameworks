@@ -1,0 +1,41 @@
+$ curl http://localhost:3000/
+HTTP 200, text/html; charset=utf-8, 1374 bytes
+<title>Главная · Team Directory</title>
+<h1>Команда в одном месте
+
+$ curl http://localhost:3000/users
+HTTP 200, text/html; charset=utf-8, 2294 bytes
+<title>Пользователи · Team Directory</title>
+<h1>Пользователи
+<strong>Alice Smith
+<strong>Bob Brown
+<strong>Charlie Green
+<strong>Diana Prince
+<strong>Eve Black
+
+$ curl 'http://localhost:3000/users?role=admin'
+HTTP 200, text/html; charset=utf-8, 1517 bytes
+<title>Пользователи · Team Directory</title>
+<h1>Пользователи 
+<strong>Alice Smith
+<strong>Diana Prince
+
+$ curl http://localhost:3000/users/1
+HTTP 200, text/html; charset=utf-8, 1178 bytes
+<title>Alice Smith · Team Directory</title>
+<h1>Alice Smith
+
+$ curl http://localhost:3000/users/999
+HTTP 404, text/html; charset=utf-8, 799 bytes
+<title>Не найдено · Team Directory</title>
+<h1>Пользователя с id 999 нет
+
+$ curl http://localhost:3000/emails/welcome/1
+HTTP 200, text/html; charset=utf-8, 1184 bytes
+<title>Добро пожаловать, Alice Smith</title>
+<strong>admin
+
+$ curl -I http://localhost:3000/css/style.css
+HTTP/1.1 200 OK
+Cache-Control: public, max-age=3600
+Content-Type: text/css; charset=UTF-8

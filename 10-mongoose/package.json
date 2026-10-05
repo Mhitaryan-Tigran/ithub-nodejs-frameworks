@@ -1,0 +1,22 @@
+{
+  "name": "mongoose-demo",
+  "version": "1.0.0",
+  "description": "MongoDB with Mongoose: User and Post models, CRUD, populate, aggregation",
+  "main": "src/examples/crud.js",
+  "scripts": {
+    "db": "node scripts/mongo.js",
+    "crud": "node src/examples/crud.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.5",
+    "mongoose": "^9.10.4"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.3.0"
+  }
+}

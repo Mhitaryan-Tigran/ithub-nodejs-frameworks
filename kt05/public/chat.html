@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog chat</title>
+  <link rel="stylesheet" href="/chat.css">
+</head>
+<body>
+  <main class="shell">
+    <form id="login" class="card login" autocomplete="on">
+      <h1>Чат блога</h1>
+      <p class="muted">Вход по аккаунту API. Тестовые: alice@example.com, bob@example.com, пароль Password123.</p>
+      <label>Email<input name="email" type="email" value="alice@example.com" required></label>
+      <label>Пароль<input name="password" type="password" value="Password123" required></label>
+      <button type="submit">Войти</button>
+      <p id="login-error" class="error" role="alert"></p>
+    </form>
+
+    <section id="chat" class="chat" hidden>
+      <aside class="side">
+        <h2>Комнаты</h2>
+        <ul id="rooms" class="rooms"></ul>
+        <form id="join" class="inline">
+          <input name="room" placeholder="новая-комната" pattern="[a-z0-9-]{2,30}" aria-label="Комната" required>
+          <button type="submit" aria-label="Войти в комнату">+</button>
+        </form>
+        <h2>В сети <span id="online-count" class="muted"></span></h2>
+        <ul id="online" class="people"></ul>
+      </aside>
+      <div class="feed">
+        <header class="bar"><strong id="room-title">general</strong><span id="me" class="muted"></span></header>
+        <ol id="messages" class="messages" aria-live="polite"></ol>
+        <form id="send" class="composer">
+          <input name="text" placeholder="Сообщение" maxlength="1000" autocomplete="off" aria-label="Сообщение" required>
+          <button type="submit">Отправить</button>
+        </form>
+      </div>
+    </section>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/chat.js"></script>
+</body>
+</html>

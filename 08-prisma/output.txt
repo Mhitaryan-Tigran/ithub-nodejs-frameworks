@@ -1,0 +1,81 @@
+
+CREATE user with two posts and tags (nested write):
+{
+  id: 3,
+  email: 'alice@example.com',
+  name: 'Alice',
+  createdAt: 2026-10-04T21:32:17.977Z,
+  posts: [
+    {
+      id: 4,
+      title: 'Hello Prisma',
+      content: 'First post',
+      published: true,
+      createdAt: 2026-10-04T21:32:17.977Z,
+      updatedAt: 2026-10-04T21:32:17.977Z,
+      authorId: 3,
+      tags: [ { id: 3, name: 'prisma' } ]
+    },
+    {
+      id: 5,
+      title: 'Draft about SQLite',
+      content: null,
+      published: false,
+      createdAt: 2026-10-04T21:32:17.977Z,
+      updatedAt: 2026-10-04T21:32:17.977Z,
+      authorId: 3,
+      tags: [ { id: 4, name: 'sqlite' } ]
+    }
+  ]
+}
+
+READ all users with post counts:
+[
+  { id: 3, name: 'Alice', _count: { posts: 2 } },
+  { id: 4, name: 'Bob', _count: { posts: 1 } }
+]
+
+READ published posts with author name:
+[
+  { title: 'Hello Prisma', author: { name: 'Alice' } },
+  { title: 'Node.js streams', author: { name: 'Bob' } }
+]
+
+READ one user by unique email:
+{
+  id: 4,
+  email: 'bob@example.com',
+  name: 'Bob',
+  createdAt: 2026-10-04T21:32:17.980Z
+}
+
+READ posts tagged "prisma":
+[ { title: 'Hello Prisma' }, { title: 'Node.js streams' } ]
+
+UPDATE publish the draft:
+{
+  id: 5,
+  title: 'Draft about SQLite',
+  content: 'Now published',
+  published: true,
+  createdAt: 2026-10-04T21:32:17.977Z,
+  updatedAt: 2026-10-04T21:32:17.984Z,
+  authorId: 3
+}
+
+UPDATE many: users whose name starts with B:
+{ count: 1 }
+
+DELETE Bob (his posts are removed by onDelete: Cascade):
+{
+  id: 4,
+  email: 'bob@example.com',
+  name: 'BOB',
+  createdAt: 2026-10-04T21:32:17.980Z
+}
+
+Remaining posts:
+2
+
+READ missing user returns null:
+null

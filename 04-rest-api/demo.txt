@@ -1,0 +1,46 @@
+$ curl 'http://localhost:3000/api/v1/users?page=1&limit=5'
+{"data":[{"id":1,"name":"Alice","email":"alice@example.com","age":25},{"id":2,"name":"Bob","email":"bob@example.com","age":31},{"id":3,"name":"Charlie","email":"charlie@example.com","age":22},{"id":4,"name":"Eve","email":"eve@example.com","age":28},{"id":5,"name":"Frank","email":"frank@example.com","age":35}],"meta":{"total":7,"page":1,"limit":5,"pages":2}}
+HTTP 200
+
+$ curl 'http://localhost:3000/api/v1/users?minAge=25&sortBy=age&order=desc'
+{"data":[{"id":5,"name":"Frank","email":"frank@example.com","age":35},{"id":2,"name":"Bob","email":"bob@example.com","age":31},{"id":4,"name":"Eve","email":"eve@example.com","age":28},{"id":6,"name":"Grace","email":"grace@example.com","age":27},{"id":1,"name":"Alice","email":"alice@example.com","age":25}],"meta":{"total":5,"page":1,"limit":10,"pages":1}}
+HTTP 200
+
+$ curl -X POST http://localhost:3000/api/v1/users -H 'Content-Type: application/json' -d '{"name":"Diana","email":"diana@example.com","age":28}' -i
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Location: /api/v1/users/8
+Content-Type: application/json; charset=utf-8
+Content-Length: 60
+ETag: W/"3c-tiQ3kNKsc9i49yvOw1dzI9jcBkM"
+Date: Sun, 04 Oct 2026 21:29:00 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":8,"name":"Diana","email":"diana@example.com","age":28}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/api/v1/users -H 'Content-Type: application/json' -d '{"name":"Diana2","email":"diana@example.com","age":30}'
+{"error":"RequestError","message":"Email diana@example.com уже занят"}
+HTTP 409
+
+$ curl -X PATCH http://localhost:3000/api/v1/users/1 -H 'Content-Type: application/json' -d '{"age":26}'
+{"id":1,"name":"Alice","email":"alice@example.com","age":26}
+HTTP 200
+
+$ curl -X DELETE http://localhost:3000/api/v1/users/1
+
+HTTP 204
+
+$ curl http://localhost:3000/api/v1/users/1
+{"error":"RequestError","message":"Пользователь 1 не найден"}
+HTTP 404
+
+$ curl http://localhost:3000/api/v1/users/2/orders
+{"data":[{"id":101,"userId":2,"product":"Laptop","total":1200,"status":"delivered"},{"id":102,"userId":2,"product":"Mouse","total":25,"status":"shipped"}]}
+HTTP 200
+
+$ curl -X POST http://localhost:3000/api/v1/users -H 'Content-Type: application/json' -d '{"name":"X","email":"nope"}'
+{"error":"RequestError","message":"Ошибка валидации","details":["name: строка от 2 символов","email: некорректный адрес","age: целое число 0–150"]}
+HTTP 400
+

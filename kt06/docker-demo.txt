@@ -1,0 +1,26 @@
+$ docker compose ps
+SERVICE   IMAGE                STATUS
+app       kt06-app             Up 23 seconds (healthy)
+db        postgres:18-alpine   Up About a minute (healthy)
+redis     redis:8-alpine       Up 4 minutes (healthy)
+worker    kt06-worker          Up Less than a second
+
+$ curl http://localhost:3000/health
+{"status":"ok","db":"ok","redis":"ok"}
+
+$ register a user (queues welcome + reminder in 24 h)
+{"data":{"user":{"id":5,"email":"dora@example.com","name":"Dora","role":"USER","createdAt":"2026-10-05T09:53:39.757Z"},"
+
+
+$ docker compose logs worker
+[worker] email worker started
+[email] welcome → Dora <dora@example.com>: «Добро пожаловать, Dora!» (job welcome-5)
+
+$ curl -u admin:*** /admin/queues/api/queues
+email {'active': 0, 'completed': 1, 'delayed': 1, 'failed': 0, 'prioritized': 0, 'waiting': 0, 'waiting-children': 0} ['reminder reminder-5']
+$ curl http://localhost:3000/admin/queues without password
+HTTP 401
+
+$ docker compose restart app && curl /api/users/... (data persists in the pgdata volume)
+{"data":{"user":{"id":5,"email":"dora@example.com","name":"Dora","role":"USER"},"accessTok
+

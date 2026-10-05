@@ -1,0 +1,16 @@
+$ curl 'http://localhost:3000/api/products?search=phone&minPrice=200&maxPrice=1000&page=1&limit=10'
+{"data":[{"id":1,"name":"Smartphone Pixel","price":699,"stock":12,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}},{"id":3,"name":"Headphones","price":249,"stock":0,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}}],"meta":{"total":2,"page":1,"limit":10,"pages":1,"sortBy":"createdAt","sortOrder":"desc"}}
+HTTP 200
+
+$ curl 'http://localhost:3000/api/products?category=electronics&inStock=true&sortBy=price&sortOrder=asc'
+{"data":[{"id":2,"name":"Phone case","price":19,"stock":140,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}},{"id":5,"name":"USB-C charger","price":29,"stock":60,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}},{"id":6,"name":"Smartwatch","price":329,"stock":8,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}},{"id":1,"name":"Smartphone Pixel","price":699,"stock":12,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}},{"id":4,"name":"Laptop Air","price":1199,"stock":5,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}}],"meta":{"total":5,"page":1,"limit":10,"pages":1,"sortBy":"price","sortOrder":"asc"}}
+HTTP 200
+
+$ curl 'http://localhost:3000/api/products?sortBy=price&sortOrder=desc&limit=3&page=2'
+{"data":[{"id":6,"name":"Smartwatch","price":329,"stock":8,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}},{"id":3,"name":"Headphones","price":249,"stock":0,"categoryId":1,"createdAt":"2026-10-04T21:33:18.504Z","category":{"name":"electronics"}},{"id":10,"name":"Desk lamp","price":59,"stock":15,"categoryId":3,"createdAt":"2026-10-04T21:33:18.507Z","category":{"name":"home"}}],"meta":{"total":12,"page":2,"limit":3,"pages":4,"sortBy":"price","sortOrder":"desc"}}
+HTTP 200
+
+$ curl 'http://localhost:3000/api/products/stats'
+{"data":[{"category":"electronics","products":6,"avgPrice":420.67,"minPrice":19,"maxPrice":1199,"totalStock":225},{"category":"books","products":3,"avgPrice":40,"minPrice":35,"maxPrice":45,"totalStock":27},{"category":"home","products":3,"avgPrice":141,"minPrice":15,"maxPrice":349,"totalStock":50}]}
+HTTP 200
+

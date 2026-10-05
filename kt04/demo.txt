@@ -1,0 +1,82 @@
+$ curl -I http://localhost:3000/health
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+
+$ curl -X POST http://localhost:3000/auth/register -H 'Content-Type: application/json' -c cookies.txt -d '{"email":"carol@example.com","name":"Carol","password":"Password123"}'
+{"data":{"user":{"id":5,"email":"carol@example.com","name":"Carol","role":"USER","createdAt":"2026-10-04T22:18:16.369Z"},"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzkxMTUyMjk2LCJleHAiOjE3OTExNTMxOTZ9.mHyWJSBAEjG8NBj7Mb1r93E9kgB_weLVUoMldOm5Njg"}}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/auth/register -H 'Content-Type: application/json' -d '{"email":"carol@example.com","name":"Carol","password":"Password123"}'
+{"error":{"code":"CONFLICT","message":"Значение поля email уже занято"}}
+HTTP 409
+
+$ curl -X POST http://localhost:3000/auth/login -H 'Content-Type: application/json' -c cookies.txt -d '{"email":"carol@example.com","password":"Password123"}'
+{"data":{"user":{"id":5,"email":"carol@example.com","name":"Carol","role":"USER"},"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzkxMTUyMjk2LCJleHAiOjE3OTExNTMxOTZ9.mHyWJSBAEjG8NBj7Mb1r93E9kgB_weLVUoMldOm5Njg"}}
+HTTP 200
+
+$ curl http://localhost:3000/auth/me -H "Authorization: Bearer $CAROL"
+{"data":{"id":5,"email":"carol@example.com","name":"Carol","role":"USER"}}
+HTTP 200
+
+$ curl http://localhost:3000/auth/me
+{"error":{"code":"UNAUTHORIZED","message":"Нужен заголовок Authorization: Bearer <access token>"}}
+HTTP 401
+
+$ curl -X POST http://localhost:3000/auth/refresh -b cookies.txt
+{"data":{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzkxMTUyMjk2LCJleHAiOjE3OTExNTMxOTZ9.mHyWJSBAEjG8NBj7Mb1r93E9kgB_weLVUoMldOm5Njg"}}
+HTTP 200
+
+$ curl -X POST http://localhost:3000/api/posts -H 'Content-Type: application/json' -H "Authorization: Bearer $CAROL" -d '{"title":"Carol writes","published":true,"tags":["auth"]}'
+{"data":{"id":6,"title":"Carol writes","content":null,"published":true,"createdAt":"2026-10-04T22:18:16.900Z","authorId":5,"author":{"id":5,"name":"Carol"},"tags":[{"id":7,"name":"auth"}]}}
+HTTP 201
+
+$ curl -X POST http://localhost:3000/api/posts -H 'Content-Type: application/json' -d '{"title":"No token"}'
+{"error":{"code":"UNAUTHORIZED","message":"Нужен заголовок Authorization: Bearer <access token>"}}
+HTTP 401
+
+# 1. Обычный пользователь пытается удалить чужой пост (пост 1 принадлежит Alice) — 403
+$ curl -X DELETE http://localhost:3000/api/posts/1 -H "Authorization: Bearer $CAROL"
+{"error":{"code":"FORBIDDEN","message":"Можно изменять только свои ресурсы"}}
+HTTP 403
+
+# Владелец редактирует свой пост — 200
+$ curl -X PATCH http://localhost:3000/api/posts/1 -H 'Content-Type: application/json' -H "Authorization: Bearer $ALICE" -d '{"title":"Getting started with Prisma (edited)"}'
+{"data":{"id":1,"title":"Getting started with Prisma (edited)","content":"Getting started with Prisma. Body text.","published":true,"createdAt":"2026-09-01T00:00:00.000Z","authorId":3,"author":{"id":3,"name":"Alice"},"tags":[{"id":1,"name":"prisma"},{"id":2,"name":"orm"}]}}
+HTTP 200
+
+# 2. Модератор удаляет любой пост — 204
+$ curl -X DELETE http://localhost:3000/api/posts/2 -H "Authorization: Bearer $MOD"
+
+HTTP 204
+
+# 3. Обычный пользователь обращается к /api/users — 403, модератор — 200
+$ curl http://localhost:3000/api/users -H "Authorization: Bearer $CAROL"
+{"error":{"code":"FORBIDDEN","message":"Роли USER не разрешено: users:list"}}
+HTTP 403
+
+$ curl 'http://localhost:3000/api/users?limit=2' -H "Authorization: Bearer $MOD"
+{"data":[{"id":1,"email":"admin@example.com","name":"Admin","role":"ADMIN","createdAt":"2026-10-04T22:18:15.201Z","_count":{"posts":0}},{"id":2,"email":"moderator@example.com","name":"Moderator","role":"MODERATOR","createdAt":"2026-10-04T22:18:15.203Z","_count":{"posts":1}}],"meta":{"total":5,"page":1,"limit":2,"pages":3}}
+HTTP 200
+
+# Смена роли: модератору нельзя, администратору можно
+$ curl -X PATCH http://localhost:3000/admin/users/5/role -H 'Content-Type: application/json' -H "Authorization: Bearer $MOD" -d '{"role":"MODERATOR"}'
+{"error":{"code":"FORBIDDEN","message":"Роли MODERATOR не разрешено: users:role"}}
+HTTP 403
+
+$ curl -X PATCH http://localhost:3000/api/admin/users/5/role -H 'Content-Type: application/json' -H "Authorization: Bearer $ADMIN" -d '{"role":"MODERATOR"}'
+{"data":{"id":5,"email":"carol@example.com","name":"Carol","role":"MODERATOR"}}
+HTTP 200
+
+$ curl -X POST http://localhost:3000/auth/logout -b cookies.txt -c cookies.txt
+
+HTTP 204
+
+$ curl -X POST http://localhost:3000/auth/refresh -b cookies.txt
+{"error":{"code":"UNAUTHORIZED","message":"Нет refresh token в cookie"}}
+HTTP 401
+
+# Rate limit: 11 попыток входа подряд
+401 401 401 401 401 401 401 401 401 401 429 

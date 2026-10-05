@@ -1,0 +1,92 @@
+PASS __tests__/socket.test.js
+  ✓ a connection without a token is rejected by the JWT middleware (48 ms)
+  ✓ a new user receives the online list, others get user:online and later user:offline (22 ms)
+  ✓ message:send is broadcast as message:new and stored in the database (22 ms)
+  ✓ room messages reach only room members, history comes on join (21 ms)
+  ✓ chat history is available over REST for authenticated users (22 ms)
+  ✓ Swagger UI and the OpenAPI document are served (17 ms)
+
+PASS __tests__/posts.test.js
+  POST /api/posts
+    ✓ creates a post for the token owner (51 ms)
+    ✓ returns 401 without a token (18 ms)
+  DELETE /api/posts/:id
+    ✓ the owner deletes their own post (20 ms)
+    ✓ another user gets 403 and the post stays (19 ms)
+    ✓ a moderator deletes any post (20 ms)
+  PATCH /api/posts/:id
+    ✓ owner may edit, stranger may not (20 ms)
+  GET /api/posts is public
+    ✓ lists with filters and meta (21 ms)
+
+PASS __tests__/auth.test.js
+  POST /auth/register
+    ✓ creates a user, hashes the password and sets an httpOnly refresh cookie (34 ms)
+    ✓ rejects a duplicate email with 409 (21 ms)
+  POST /auth/login
+    ✓ returns an access token for the right password (14 ms)
+    ✓ returns 401 for a wrong password (12 ms)
+  GET /auth/me
+    ✓ returns the current user with a token and 401 without (13 ms)
+  refresh and logout
+    ✓ refresh issues a new access token from the cookie, logout revokes it (15 ms)
+
+PASS __tests__/rbac.test.js
+  ✓ GET /api/users: USER 403, MODERATOR and ADMIN 200 (43 ms)
+  ✓ PATCH /admin/users/:id/role: only ADMIN (18 ms)
+  ✓ a user reads their own profile but not someone else's (18 ms)
+
+PASS __tests__/security.test.js
+  ✓ helmet sets protective headers (2 ms)
+  ✓ CORS allows listed origins only (2 ms)
+  ✓ bodies over 10kb are rejected with 413 (1 ms)
+  ✓ the 11th login attempt within 15 minutes gets 429 (47 ms)
+
+PASS __tests__/unit.test.js
+  ✓ permission matrix (1 ms)
+  register schema
+    ✓ accepts valid data and normalises the email
+    ✓ reports every invalid field at once (1 ms)
+  jwt utils
+    ✓ access token round-trips and carries the role (1 ms)
+    ✓ an access token is not accepted as a refresh token (1 ms)
+
+PASS __tests__/production.test.js
+  ✓ in production the error handler hides the stack trace (1 ms)
+
+------------------|---------|----------|---------|---------|------------------------------------
+File              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                  
+------------------|---------|----------|---------|---------|------------------------------------
+All files         |   91.83 |    70.86 |   88.88 |   94.55 |                                    
+ src              |     100 |      100 |     100 |     100 |                                    
+  app.js          |     100 |      100 |     100 |     100 |                                    
+  db.js           |     100 |      100 |     100 |     100 |                                    
+ src/config       |   86.95 |    59.09 |     100 |     100 |                                    
+  index.js        |   81.25 |       60 |     100 |     100 | 6-35                               
+  permissions.js  |     100 |       50 |     100 |     100 | 8                                  
+  swagger.js      |     100 |      100 |     100 |     100 |                                    
+ src/middleware   |   85.89 |    80.76 |   73.33 |    88.4 |                                    
+  auth.js         |   88.23 |       70 |     100 |   93.33 | 13                                 
+  errorHandler.js |      80 |     82.6 |      40 |   78.94 | 6-7,13,25                          
+  rbac.js         |   85.71 |    83.33 |     100 |   93.75 | 22                                 
+  security.js     |     100 |      100 |     100 |     100 |                                    
+  validate.js     |      75 |    66.66 |   66.66 |      75 | 5-6                                
+ src/realtime     |   96.29 |    71.05 |   93.75 |     100 |                                    
+  socket.js       |   96.29 |    71.05 |   93.75 |     100 | 12-16,18-23,30-32,46-49,67,100-102 
+ src/routes       |   89.61 |       60 |      88 |   91.54 |                                    
+  admin.js        |   92.85 |       50 |     100 |     100 | 12                                 
+  auth.js         |   96.29 |    85.71 |     100 |      98 | 50                                 
+  messages.js     |     100 |      100 |     100 |     100 |                                    
+  posts.js        |   89.18 |    46.15 |   88.88 |    90.9 | 35-37                              
+  users.js        |   74.28 |    33.33 |   66.66 |      75 | 36-42,46-47                        
+ src/schemas      |     100 |      100 |     100 |     100 |                                    
+  index.js        |     100 |      100 |     100 |     100 |                                    
+ src/utils        |     100 |      100 |     100 |     100 |                                    
+  http.js         |     100 |      100 |     100 |     100 |                                    
+  jwt.js          |     100 |      100 |     100 |     100 |                                    
+------------------|---------|----------|---------|---------|------------------------------------
+Test Suites: 7 passed, 7 total
+Tests:       32 passed, 32 total
+Snapshots:   0 total
+Time:        1.676 s, estimated 2 s
+Ran all test suites.

@@ -1,0 +1,61 @@
+
+CREATE: email is lower-cased, password is a bcrypt hash, not the text:
+{ email: 'alice@example.com', password: '$2b$10$JZi43YfB/ZkvG...' }
+
+Instance method checkPassword:
+{ right: true, wrong: false }
+
+Validation errors:
+[
+  'name: Path `name` (`A`, length 1) is shorter than the minimum allowed length (2).',
+  'email: Некорректный email',
+  'password: Path `password` (`1`, length 1) is shorter than the minimum allowed length (6).'
+]
+
+Unique index on email:
+{
+  code: 11000,
+  message: 'E11000 duplicate key error collection: myapp.users index: email_1'
+}
+
+READ with filter, projection, sort:
+[
+  { title: 'MongoDB for SQL people', views: 120 },
+  { title: 'Mongoose middleware', views: 45 }
+]
+
+READ populate author:
+{
+  title: 'Mongoose middleware',
+  author: { name: 'Alice', email: 'alice@example.com' }
+}
+
+READ virtual populate user.posts:
+{
+  _id: '6ac2c66054cf87fe89e3be74',
+  name: 'Alice',
+  posts: [
+    { title: 'MongoDB for SQL people' },
+    { title: 'Mongoose middleware' }
+  ]
+}
+
+READ text search "documents":
+[ { title: 'MongoDB for SQL people' } ]
+
+UPDATE $set, $inc, $push into an embedded array:
+{
+  title: 'Indexes in MongoDB',
+  published: true,
+  views: 13,
+  comments: [ 'Great intro!' ]
+}
+
+AGGREGATE views and posts per author:
+[
+  { posts: 2, views: 165, author: 'Alice' },
+  { posts: 1, views: 13, author: 'Bob' }
+]
+
+DELETE Bob and his posts:
+{ postsRemoved: 1, usersLeft: 1, postsLeft: 2 }
